@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace TestProject
 {
-    class Test
+    class _Thread
     {
         public static void ThreadProc()
         {
             for (int i = 0; i < 10; ++i)
             {
                 Console.WriteLine("ThreadProc: {0}", i);
-                Thread.Sleep(0);
+                System.Threading.Thread.Sleep(0);
             }
         }
 
@@ -43,10 +43,10 @@ namespace TestProject
             do
             {
                 Console.WriteLine("Thread {0}: {1}, Priority {2}",
-                    Thread.CurrentThread.ManagedThreadId,
-                    Thread.CurrentThread.ThreadState,
-                    Thread.CurrentThread.Priority);
-                Thread.Sleep(500);
+                    System.Threading.Thread.CurrentThread.ManagedThreadId,
+                    System.Threading.Thread.CurrentThread.ThreadState,
+                    System.Threading.Thread.CurrentThread.Priority);
+                System.Threading.Thread.Sleep(500);
             }
             while (sw.ElapsedMilliseconds <= interval);
             sw.Stop();
@@ -57,10 +57,10 @@ namespace TestProject
             while (true)
             {
                 Console.WriteLine("I am Background Thread {0}, and {1}. Priority {2}",
-                    Thread.CurrentThread.ManagedThreadId,
-                    Thread.CurrentThread.ThreadState,
-                    Thread.CurrentThread.Priority);
-                Thread.Sleep(500);
+                    System.Threading.Thread.CurrentThread.ManagedThreadId,
+                    System.Threading.Thread.CurrentThread.ThreadState,
+                    System.Threading.Thread.CurrentThread.Priority);
+                System.Threading.Thread.Sleep(500);
             }
         }
 
@@ -69,21 +69,21 @@ namespace TestProject
             for (int i = 0; i < 4; ++i)
             {
                 Console.WriteLine("I am Foreground Thread {0}, and {1}. Priority {2}",
-                    Thread.CurrentThread.ManagedThreadId,
-                    Thread.CurrentThread.ThreadState,
-                    Thread.CurrentThread.Priority);
-                Thread.Sleep(500);
+                    System.Threading.Thread.CurrentThread.ManagedThreadId,
+                    System.Threading.Thread.CurrentThread.ThreadState,
+                    System.Threading.Thread.CurrentThread.Priority);
+                System.Threading.Thread.Sleep(500);
             }
         }
 
 
-        static void Main(string[] args)
+        static void _Main(string[] args)
         {
             //Thread t1 = new Thread(new ThreadStart(ThreadProc));
             //Thread t2 = new Thread(PrintHelloTenTimes);
             //Thread t3 = new Thread(ExecuteInForeground);
-            Thread t4 = new Thread(BackgroundThread);
-            Thread t5 = new Thread(ForegroundThread);
+            System.Threading.Thread t4 = new System.Threading.Thread(BackgroundThread);
+            System.Threading.Thread t5 = new System.Threading.Thread(ForegroundThread);
             t4.IsBackground = false;
             
 
@@ -93,7 +93,7 @@ namespace TestProject
             t4.Start();
             t5.Start();
 
-            Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(1000);
             t4.IsBackground = true;
 
 
