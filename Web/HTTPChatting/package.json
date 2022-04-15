@@ -1,0 +1,15 @@
+{
+  "name": "httpchat",
+  "version": "1.0.0",
+  "description": "Web chatting program",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "han",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "express": "^4.17.3",
+    "ws": "^8.5.0"
+  }
+}
