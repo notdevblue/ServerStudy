@@ -1,39 +1,37 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <unistd.h>
 
 void main()
 {
-   int sock;
-   sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-   struct sockaddr_in ServAddr;
-   const char *servIP;
-   int ServPort;
-
-   memset(&ServAddr, 0, sizeof(ServAddr));
-   ServAddr.sin_family = AF_INET;
-   ServAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-   ServAddr.sin_port = htons(36000);
-
-   if (bind(sock, (struct sockaddr*)&ServAddr, sizeof(ServAddr)) < 0)
+   struct sockaddr_in addr;
+   int sock, client, res;
+   char dbuf[1024];
+   while (1)
    {
-      perror("bind");
-      exit(EXIT_FAILURE);
+      sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+      addr.sin_port = htons(48000);
+      addr.sin_family = AF_INET;
+      addr.sin_addr.s_addr = INADDR_ANY;
+      bind(sock, (struct sockaddr *)&addr, sizeof(addr));
+      listen(sock, SOMAXCONN);
+      printf("Server listening...\r\n");
+
+      client = accept(sock, NULL, NULL);
+      close(sock);
+      sock = client;
+
+      while (1)
+      {
+         res = recv(sock, dbuf, sizeof(dbuf), 0);
+         if (res <= 0)
+            break;
+         printf("Recived %s\r\n", dbuf);
+      }
+
+      shutdown(sock, 2);
    }
-
-   listen(sock, SOMAXCONN);
-
-   struct sockaddr_in ClntAddr;
-   unsigned int clntLen;
-   clntLen = sizeof(ClntAddr);
-   int clntSock = accept(sock, (struct sockaddr *)&ClntAddr, &clntLen);
-
-   send(clntSock, "Hello", 1024, 0);
-   const char *buffer;
-   recv(clntSock, buffer, 1024, 0);
 }
