@@ -53,12 +53,14 @@ void main()
 
    while (1)
    {
-      int len;
-      if (len = recv(client_sock, buffer, PACKET_SIZE, 0) == -1)
+      int len = recv(client_sock, buffer, PACKET_SIZE, 0);
+      if (len == -1)
       {
          perror("Error receiving data");
          return;
       }
+
+      printf("Recived buffer length: %d\r\n", len);
 
       if (len <= 0)
       {

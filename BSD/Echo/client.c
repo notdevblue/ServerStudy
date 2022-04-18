@@ -38,12 +38,12 @@ void main()
    while (1)
    {
       memset(buffer, 0, PACKET_SIZE);
-      scanf("%s", buffer);
+      fgets(buffer, PACKET_SIZE, stdin);
 
-      if (buffer == "EXIT")
-         break;
+      send(sock, buffer, PACKET_SIZE, 0);
 
-      // send(sock, buffer, PACKET_SIZE, 0);
+      recv(sock, buffer, PACKET_SIZE, 0);
+      printf("Echo back: %s\r\n", buffer);
    }
 
    shutdown(sock, 2);
