@@ -23,13 +23,13 @@ void main()
    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
    if (sock == -1)
    {
-      perror("Error creating socket\r\n");
+      perror("Error creating socket");
       return;
    }
 
    if (connect(sock, (SOCKADDR *)&addr, sizeof(addr)) == -1)
    {
-      perror("Error connecting server\r\n");
+      perror("Error connecting server");
       return;
    }
 

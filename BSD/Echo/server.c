@@ -21,13 +21,13 @@ void main()
    listening_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
    if (listening_sock == -1) 
    {
-      perror("Error creating listening socket\r\n");
+      perror("Error creating listening socket");
       return;
    }
 
    if (bind(listening_sock, (SOCKADDR *)&addr, sizeof(addr)) == -1)
    {
-      perror("error binding listening socket\r\n");
+      perror("error binding listening socket");
       return;
    }
 
@@ -35,7 +35,7 @@ void main()
    {
       shutdown(listening_sock, 2);
       close(listening_sock);
-      perror("Error listening\r\n");
+      perror("Error listening");
       return;
    }
 
@@ -44,17 +44,22 @@ void main()
    client_sock = accept(listening_sock, NULL, NULL);
    if (client_sock == -1)
    {
-      perror("Error accepting client\r\n");
+      perror("Error accepting client");
       return;
    }
 
    shutdown(listening_sock, 2);
    close(listening_sock);
-   shutdown(client_sock, 2);
 
    while (1)
    {
-      int len = recv(client_sock, buffer, PACKET_SIZE, 0);
+      int len;
+      if (len = recv(client_sock, buffer, PACKET_SIZE, 0) == -1)
+      {
+         perror("Error receiving data");
+         return;
+      }
+
       if (len <= 0)
       {
          printf("%s\r\n", buffer);
