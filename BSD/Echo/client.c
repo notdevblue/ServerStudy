@@ -39,7 +39,7 @@ void main()
    {
       memset(buffer, 0, PACKET_SIZE);
       fgets(buffer, PACKET_SIZE, stdin);
-
+      
       send(sock, buffer, PACKET_SIZE, 0);
 
       recv(sock, buffer, PACKET_SIZE, 0);
