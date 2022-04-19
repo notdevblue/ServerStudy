@@ -27,11 +27,11 @@ void *recvthread(void *psocket)
 
       if (len <= CLIENT_LEFT)
       {
-         printf("Server exitted?\r\n");
+         printf("Lost connection with server.\r\n");
          break;
       }
 
-      printf("Someone: %s\r\n", buffer);
+      printf("Someone: %s", buffer);
    }
 
    return 0;
@@ -51,7 +51,7 @@ void main()
 
    pthread_t recv_thread;
 
-   printf("Server is starting...\r\n");
+   printf("Client is starting...\r\n");
 
    // create listening socket
    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -95,6 +95,6 @@ void main()
    // wait for receive thread to terminated
    pthread_join(recv_thread, NULL);
 
-   printf("Press any key to exit...");
+   printf("\r\nPress any key to exit...\r\n");
    getchar();
 }

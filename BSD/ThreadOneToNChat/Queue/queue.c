@@ -6,9 +6,11 @@ char **queue;
 int g_length;
 int g_idx;
 
+int g_counter;
+
 void init(int length)
 {
-   g_length = g_length;
+   g_length = length;
    g_idx = 0;
    queue = (char **)malloc(sizeof(char *) * g_length);
    for (int i = 0; i < g_length; ++i)
@@ -27,19 +29,36 @@ void erase()
    free(queue);
 }
 
-void enqueue(const char * str)
+void enqueue(char *str)
 {
    if (g_idx >= g_length - 1)
    {
-      return;
+      exit(3);
    }
 
    queue[g_idx++] = str;
 }
 
-const char *dequeue()
+char *dequeue()
 {
-   return queue[g_idx--];
+   return queue[--g_idx];
+}
+
+char *peek_and_dequeue(int length)
+{
+   if(g_counter <= 0)
+      g_counter = length;
+
+   --g_counter;
+
+   if(g_counter <= 0)
+   {
+      return queue[--g_idx];
+   }
+   else
+   {
+      return queue[g_idx - 1];
+   }
 }
 
 int count()

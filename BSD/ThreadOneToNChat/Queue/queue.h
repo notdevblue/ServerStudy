@@ -2,6 +2,7 @@
 
 void init(int length);
 void erase();
-void enqueue(const char * str);
-const char *dequeue();
+void enqueue(char *str);
+char *dequeue();
+char *peek_and_dequeue(int length);
 int count();
