@@ -15,23 +15,31 @@ void *send_thread(void *param);
 void create_io_thread(SOCKET* sock);
 
 int g_client_count = 0;
+const int g_default_thread_running = 5;
 pthread_t *g_recv_t_arr;
 pthread_t *g_send_t_arr;
 pthread_mutex_t g_lock;
 
 void main()
 {
-   init(20);
+   init(10);
 
    pthread_t listening_t;
 
+   // g_recv_t_arr = (pthread_t *)malloc(sizeof(pthread_t) * g_default_thread_running);
+   // g_send_t_arr = (pthread_t *)malloc(sizeof(pthread_t) * g_default_thread_running);
+
    pthread_create(&listening_t, NULL, listening_thread, NULL);
+
+
    // Wait for threads to terminated
    pthread_join(listening_t, NULL);
-   for (int i = 0; i < g_client_count; ++i)
+   for (int i = 0; i < (g_client_count < g_default_thread_running ? g_default_thread_running : g_client_count); ++i)
    {
+      pthread_mutex_lock(&g_lock);
       pthread_join(g_recv_t_arr[i], NULL);
       pthread_join(g_recv_t_arr[i], NULL);
+      pthread_mutex_unlock(&g_lock);
    }
 
    erase();
@@ -138,6 +146,7 @@ void *send_thread(void *param)
       pthread_mutex_lock(&g_lock);
       char *str = peek_and_dequeue(g_client_count);
       pthread_mutex_unlock(&g_lock);
+
       if (send(sock, str, PACKET_SIZE, 0) == FAILED)
       {
          perror("send() failed.");
@@ -148,9 +157,20 @@ void *send_thread(void *param)
 
 void create_io_thread(SOCKET *sock)
 {
-   ++g_client_count;
-   g_recv_t_arr = (pthread_t *)realloc(g_recv_t_arr, (g_client_count) * sizeof(pthread_t));
-   g_send_t_arr = (pthread_t *)realloc(g_send_t_arr, (g_client_count) * sizeof(pthread_t));
+   pthread_t *temp_recv_arr;
+   pthread_t *temp_send_arr;
+   int target_size = (++g_client_count + 1) * sizeof(pthread_t);
+
+   pthread_mutex_lock(&g_lock);
+   temp_recv_arr = (pthread_t *)realloc((void *)g_recv_t_arr, target_size);
+   temp_send_arr = (pthread_t *)realloc((void *)g_send_t_arr, target_size);
+   pthread_mutex_unlock(&g_lock);
+
+   if (temp_recv_arr)
+      g_recv_t_arr = temp_recv_arr;
+
+   if (temp_send_arr)
+      g_send_t_arr = temp_send_arr;
 
    pthread_create(&g_recv_t_arr[g_client_count], NULL, recv_thread, (void *)sock);
    pthread_create(&g_send_t_arr[g_client_count], NULL, send_thread, (void *)sock);
